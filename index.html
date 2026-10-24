@@ -289,9 +289,12 @@ const LOOKS={
  glasses:[{id:'thin',name:'Тонкая оправа',cost:0},{id:'dark',name:'Тёмная оправа',cost:0},{id:'none',name:'Без очков',cost:0},{id:'sun',name:'Солнцезащитные',cost:250},{id:'heart',name:'Очки-сердечки',cost:400}],
  hat:[{id:'none',name:'Без головного убора',cost:0},{id:'cap',name:'Розовая кепка',c:'#ff5fc7',cost:200},{id:'beanie',name:'Шапка-бини',c:'#ffd166',cost:250},{id:'bandana',name:'Бандана',c:'#d6324a',cost:300},{id:'crown',name:'Корона',c:'#ffd166',cost:800}],
  phones:[{id:'blue',name:'Синие',c:'#3f66d6',cost:0},{id:'white',name:'Белые',c:'#e9e7f2',cost:100},{id:'pink',name:'Розовые',c:'#ff7fcf',cost:180},{id:'stickers',name:'Синие с наклейками',c:'#3f66d6',cost:300},{id:'gold',name:'Золотые',c:'#e6b84a',cost:500}],
- neck:[{id:'none',name:'Без цепочки',cost:0},{id:'fblue',name:'Цветок голубой',c:'#7fb3c8',cost:150},{id:'fsky',name:'Цветок небесный',c:'#b8cdea',cost:150},
-  {id:'flilac',name:'Цветок сиреневый',c:'#cf9fb6',cost:200},{id:'fyellow',name:'Цветок лимонный',c:'#f0e08a',cost:200},{id:'famber',name:'Цветок янтарный',c:'#a8642a',cost:280}]
+ neck:[{id:'none',name:'Без цепочки',cost:0},{id:'fblue',name:'Цветок голубой',c:'#7fb3c8',cost:90},{id:'fsky',name:'Цветок небесный',c:'#b8cdea',cost:90},
+  {id:'flilac',name:'Цветок сиреневый',c:'#cf9fb6',cost:120},{id:'fyellow',name:'Цветок лимонный',c:'#f0e08a',cost:120},{id:'famber',name:'Цветок янтарный',c:'#a8642a',cost:180}],
+ wrist:[{id:'none',name:'Без браслета',cost:0},{id:'rosegrey',name:'Розовый кварц и серебро',c:'#f2c9d4',cost:120},{id:'rose',name:'Розовый кварц',c:'#f0b8c8',cost:100},
+  {id:'pearl',name:'Жемчужный',c:'#f4f0e6',cost:160},{id:'matcha',name:'Матча',c:'#a3c96a',cost:160},{id:'onyx',name:'Чёрный оникс',c:'#2a2830',cost:220},{id:'candy',name:'Радужный',c:'#ff8cc8',cost:260}]
 };
+const BEADS={rosegrey:['#f2c9d4','#cfcfd6','#e8e8ee','#9a9aa6'],rose:['#f2c9d4','#eab4c4'],pearl:['#f6f2e8','#e9e2d2'],matcha:['#a3c96a','#c8e39a'],onyx:['#2a2830','#c9ccd8'],candy:['#ff8cc8','#ffd166','#7fd6ff','#a3dd5f','#c7a4ff']};
 const FLOWERS={fblue:['#7fb3c8','#cfe6ee'],fsky:['#b8cdea','#eef3fb'],flilac:['#cf9fb6','#f1dce6'],fyellow:['#f0e08a','#fbf5d2'],famber:['#a8642a','#e0a46a']};
 const GARAGE={
  color:[{id:'navy',name:'Ночной синий',c:'#2f47a8',cost:0},{id:'pearl',name:'Жемчуг',c:'#e4e2ee',cost:0},{id:'matcha',name:'Матча',c:'#7fc65a',cost:150},{id:'peach',name:'Персик',c:'#ff9e7a',cost:200},{id:'black',name:'Чёрный глянец',c:'#1d1b26',cost:300},{id:'pink',name:'Неон-розовый',c:'#ff5fc7',cost:500}],
@@ -305,7 +308,7 @@ const GARAGE={
 const GARAGE_LABEL={color:'Цвет кузова',decal:'Наклейки',rims:'Диски',glow:'Неон под днищем',sub:'Сабвуфер',wing:'Спойлер',exhaust:'Выхлоп'};
 const TAGS=['ЗАВОЗ','W','МОСКВА','VARKA','ИМБА','НА ВАЙБЕ','КАЗАНЬ','МАТЧА','МОСКВА','ДВИЖ','♪♪','ФЛЕКС','НОЧЬ','812','ЗАВОЗ','W','МОСКВА','ЛЕГЕНДА'];let tagI=0;
 
-let save={notes:0,best:0,runs:0,owned:{},muted:false,nick:'',board:[],car:{color:'navy',decal:'none',rims:'silver',glow:'none',sub:'none',wing:'low',exhaust:'none'},look:{top:'hoodie',bottom:'jeans',shoes:'green',glasses:'thin',hat:'none',phones:'blue',neck:'none'}};
+let save={notes:0,best:0,runs:0,owned:{},muted:false,nick:'',board:[],car:{color:'navy',decal:'none',rims:'silver',glow:'none',sub:'none',wing:'low',exhaust:'none'},look:{top:'hoodie',bottom:'jeans',shoes:'green',glasses:'thin',hat:'none',phones:'blue',neck:'none',wrist:'none'}};
 try{const s=JSON.parse(localStorage.getItem('varka-run-v1')||'null');
  if(s){save.notes=s.notes|0;save.best=s.best|0;save.runs=s.runs|0;save.owned=s.owned||{};save.muted=!!s.muted;save.nick=typeof s.nick==='string'?s.nick:'';save.board=Array.isArray(s.board)?s.board.slice(0,30):[];Object.assign(save.car,s.car||{});Object.assign(save.look,s.look||{});}}catch(e){}
 function persist(){try{localStorage.setItem('varka-run-v1',JSON.stringify(save));}catch(e){}}
@@ -571,10 +574,13 @@ const TOPS={hoodie:['h','#1f2b5e','#17214a','#33438a'],pinkhoodie:['h','#ff8cc8'
 const BOTS={jeans:'#9dbbe0',pants:'#80808c',black:'#2c2a35',cargo:'#8b8a5c'};
 const SHOES={green:['#2e9e5b','#fff'],white:['#f2f0ea','#b9b6c8'],pink:['#ff8cc8','#fff'],chunky:['#26242e','#ff5fc7']};
 const sleeveOf=top=>{const t=TOPS[top]||TOPS.hoodie;return t[0]==='v'?t[2]:t[1];};
-function arm(c,s,col,back){
+function arm(c,s,col,back,wrist){
  c.save();c.translate(back?8:-8,-28);c.rotate(-s*.7);
  c.fillStyle=back?shade(col,.28):col;rr(c,-3.2,0,6.4,11,3.2);c.fill();
  c.fillStyle=back?shade(SKIN,.2):SKIN;c.beginPath();c.arc(0,12.5,2.8,0,6.3);c.fill();
+ const bd=!back&&BEADS[wrist];
+ if(bd){for(let i=0;i<5;i++){const x=-2.6+i*1.3,col2=bd[i%bd.length];c.fillStyle=col2;c.beginPath();c.arc(x,10.9,.82,0,6.3);c.fill();
+   c.fillStyle='rgba(255,255,255,.6)';c.beginPath();c.arc(x-.25,10.6,.25,0,6.3);c.fill();}}
  c.restore();
 }
 function shade(hex,amt){const n=parseInt(hex.slice(1),16),t=[26,20,56];const ch=[n>>16&255,n>>8&255,n&255].map((v,i)=>Math.round(v+(t[i]-v)*amt));return '#'+ch.map(v=>v.toString(16).padStart(2,'0')).join('');}
@@ -654,7 +660,7 @@ function drawPlayer(c,x,y,t,look,o={}){
  c.fillStyle='#d9a441';rr(c,-2.8,15.4,2.2,1.8,.6);c.fill();
  c.restore();
  c.save();c.translate(0,-44);drawHead(c,look);c.restore();
- arm(c,sw,sleeve,false);
+ arm(c,sw,sleeve,false,look.wrist);
  c.restore();
 }
 
@@ -1176,7 +1182,7 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>selectTab(b.dataset.t
 function buildWardrobe(){
  $('#wardN').textContent=save.notes;
  const box=$('#wardrobeOpts');box.innerHTML='';
- for(const [cat,label] of [['top','Верх'],['bottom','Низ'],['shoes','Обувь'],['hat','На голову'],['glasses','Очки'],['phones','Наушники'],['neck','Аксессуары · цепочка']]){
+ for(const [cat,label] of [['top','Верх'],['bottom','Низ'],['shoes','Обувь'],['hat','На голову'],['glasses','Очки'],['phones','Наушники'],['neck','Аксессуары · цепочка'],['wrist','Аксессуары · браслет']]){
   const g=document.createElement('div');g.className='optgroup';g.innerHTML=`<h4>${label}</h4><div class="chips"></div>`;
   const row=g.querySelector('.chips');
   for(const it of LOOKS[cat]){
