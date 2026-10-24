@@ -311,7 +311,7 @@ const LOOKS={
  shoes:[{id:'green',name:'Зелёные кеды',c:'#2e9e5b',cost:0},{id:'white',name:'Белые кеды',c:'#f2f0ea',cost:120},{id:'pink',name:'Розовые кеды',c:'#ff8cc8',cost:200},{id:'chunky',name:'Массивные чёрные',c:'#26242e',cost:350}],
  glasses:[{id:'thin',name:'Тонкая оправа',cost:0},{id:'dark',name:'Тёмная оправа',cost:0},{id:'none',name:'Без очков',cost:0},{id:'sun',name:'Солнцезащитные',cost:250},{id:'heart',name:'Очки-сердечки',cost:400}],
  hat:[{id:'none',name:'Без головного убора',cost:0},{id:'cap',name:'Розовая кепка',c:'#ff5fc7',cost:200},{id:'beanie',name:'Шапка-бини',c:'#ffd166',cost:250},{id:'bandana',name:'Бандана',c:'#d6324a',cost:300},{id:'crown',name:'Корона',c:'#ffd166',cost:800}],
- phones:[{id:'blue',name:'Синие',c:'#3f66d6',cost:0},{id:'white',name:'Белые',c:'#e9e7f2',cost:100},{id:'pink',name:'Розовые',c:'#ff7fcf',cost:180},{id:'stickers',name:'Синие с наклейками',c:'#3f66d6',cost:300},{id:'gold',name:'Золотые',c:'#e6b84a',cost:500}],
+ phones:[{id:'blue',name:'Синие',c:'#3f66d6',cost:0},{id:'none',name:'Без наушников',cost:0},{id:'white',name:'Белые',c:'#e9e7f2',cost:100},{id:'pink',name:'Розовые',c:'#ff7fcf',cost:180},{id:'stickers',name:'Синие с наклейками',c:'#3f66d6',cost:300},{id:'gold',name:'Золотые',c:'#e6b84a',cost:500}],
  neck:[{id:'none',name:'Без цепочки',cost:0},{id:'fblue',name:'Цветок голубой',c:'#7fb3c8',cost:200},{id:'fsky',name:'Цветок небесный',c:'#b8cdea',cost:200},
   {id:'flilac',name:'Цветок сиреневый',c:'#cf9fb6',cost:260},{id:'fyellow',name:'Цветок лимонный',c:'#f0e08a',cost:260},{id:'famber',name:'Цветок янтарный',c:'#a8642a',cost:350}],
  wrist:[{id:'none',name:'Без браслета',cost:0},{id:'rosegrey',name:'Розовый кварц и серебро',c:'#f2c9d4',cost:220},{id:'rose',name:'Розовый кварц',c:'#f0b8c8',cost:180},
@@ -586,11 +586,11 @@ function drawHead(c,look){
   c.beginPath();c.arc(-3,2,4.6,0,6.3);c.stroke();c.beginPath();c.arc(7,2,4.6,0,6.3);c.stroke();
   c.beginPath();c.moveTo(1.6,1.6);c.lineTo(2.4,1.6);c.stroke();}
  drawHat(c,look.hat);
- const ph=lookItem('phones',look.phones),pc=ph.c;
+ if(look.phones!=='none'){const ph=lookItem('phones',look.phones),pc=ph.c;
  if(look.hat!=='crown'){c.strokeStyle=pc;c.lineWidth=2.8;c.beginPath();c.arc(0,-1,17,Math.PI*1.06,Math.PI*1.94);c.stroke();}
  c.fillStyle=pc;rr(c,-20,-6,6.5,13,3);c.fill();rr(c,13.5,-6,6.5,13,3);c.fill();
  if(look.phones==='stickers'){for(const [x,y,col] of [[-18.5,-3,'#ffd166'],[-16,2,'#ff5fc7'],[16,-3,'#a3dd5f'],[17.5,3,'#ffd166']]){c.fillStyle=col;c.beginPath();c.arc(x,y,1.4,0,6.3);c.fill();}}
- c.fillStyle='rgba(255,255,255,.3)';rr(c,-19,-5,1.8,10,1);c.fill();
+ c.fillStyle='rgba(255,255,255,.3)';rr(c,-19,-5,1.8,10,1);c.fill();}
 }
 const TOPS={hoodie:['h','#1f2b5e','#17214a','#33438a'],pinkhoodie:['h','#ff8cc8','#e86aae','#ffb8de'],matchahoodie:['h','#9ccc65','#7fae4b','#c4e59c'],
  tee:['t','#f3f1f8'],kazan:['t','#f3f1f8'],graffiti:['t','#f3f1f8'],varsity:['v','#2b3a8f','#f3ecd8']};
