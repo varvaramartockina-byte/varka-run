@@ -245,7 +245,7 @@ kbd{font:700 10px var(--f-head);border:1.5px solid #000;border-radius:4px;paddin
         </div>
       </div>
     </div>
-    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 19</small></span><span id="capBest"></span></div>
+    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 20</small></span><span id="capBest"></span></div>
   </div>
 
   <div class="tabs" role="tablist">
@@ -326,13 +326,14 @@ const GARAGE={
  rims:[{id:'silver',name:'Серебро',c:'#c9ccd8',cost:0},{id:'black',name:'Чёрные',c:'#3a3842',cost:120},{id:'gold',name:'Золото',c:'#f2c14e',cost:250},{id:'neon',name:'Неоновые',c:'#5ff3ff',cost:400}],
  sub:[{id:'none',name:'Без саба',cost:0},{id:'sub',name:'Сабвуфер',c:'#5ff3ff',cost:300},{id:'dual',name:'Два саба',c:'#ff5fc7',cost:600}],
  wing:[{id:'low',name:'Низкий спойлер',cost:0},{id:'off',name:'Без спойлера',cost:0},{id:'wing',name:'Антикрыло',cost:280}],
+ stance:[{id:'stock',name:'Стоковая',cost:0},{id:'low',name:'Занижение',cost:350},{id:'slammed',name:'Сильное занижение',cost:650}],
  exhaust:[{id:'none',name:'Обычный',cost:0},{id:'flames',name:'Огонь из выхлопа',c:'#ff8f3a',cost:400},{id:'neon',name:'Неоновый выхлоп',c:'#5ff3ff',cost:450}],
  glow:[{id:'none',name:'Без неона',c:null,cost:0},{id:'pink',name:'Розовый',c:'#ff5fc7',cost:300},{id:'cyan',name:'Голубой',c:'#5ff3ff',cost:300},{id:'matcha',name:'Матча',c:'#a3dd5f',cost:350}]
 };
-const GARAGE_LABEL={color:'Цвет кузова',decal:'Наклейки',rims:'Диски',glow:'Неон под днищем',sub:'Сабвуфер',wing:'Спойлер',exhaust:'Выхлоп'};
+const GARAGE_LABEL={color:'Цвет кузова',decal:'Наклейки',rims:'Диски',glow:'Неон под днищем',sub:'Сабвуфер',wing:'Спойлер',exhaust:'Выхлоп',stance:'Подвеска'};
 const TAGS=['ЗАВОЗ','W','МОСКВА','VARKA','ИМБА','НА ВАЙБЕ','КАЗАНЬ','МАТЧА','МОСКВА','ДВИЖ','♪♪','ФЛЕКС','НОЧЬ','812','ЗАВОЗ','W','МОСКВА','ЛЕГЕНДА'];let tagI=0;
 
-let save={notes:0,best:0,runs:0,owned:{},muted:false,nick:'',board:[],car:{color:'navy',decal:'none',rims:'silver',glow:'none',sub:'none',wing:'low',exhaust:'none'},look:{top:'hoodie',bottom:'jeans',shoes:'green',glasses:'thin',hat:'none',phones:'blue',neck:'none',wrist:'none'}};
+let save={notes:0,best:0,runs:0,owned:{},muted:false,nick:'',board:[],car:{color:'navy',decal:'none',rims:'silver',glow:'none',sub:'none',wing:'low',exhaust:'none',stance:'stock'},look:{top:'hoodie',bottom:'jeans',shoes:'green',glasses:'thin',hat:'none',phones:'blue',neck:'none',wrist:'none'}};
 try{const s=JSON.parse(localStorage.getItem('varka-run-v1')||'null');
  if(s){save.notes=s.notes|0;save.best=s.best|0;save.runs=s.runs|0;save.owned=s.owned||{};save.muted=!!s.muted;save.nick=typeof s.nick==='string'?s.nick:'';save.board=Array.isArray(s.board)?s.board.slice(0,30):[];Object.assign(save.car,s.car||{});Object.assign(save.look,s.look||{});}}catch(e){}
 function persist(){try{localStorage.setItem('varka-run-v1',JSON.stringify(save));}catch(e){}}
@@ -742,10 +743,13 @@ function drawCar(c,x,y,cfg,t,o={}){
  if(glow){const g=c.createRadialGradient(0,-2,4,0,-2,62);g.addColorStop(0,hexA(glow,.8));g.addColorStop(1,hexA(glow,0));c.fillStyle=g;c.beginPath();c.ellipse(0,-1,60,10,0,0,6.3);c.fill();}
  if(o.beam){const bg=c.createLinearGradient(46,0,170,0);bg.addColorStop(0,'rgba(255,246,200,.45)');bg.addColorStop(1,'rgba(255,246,200,0)');
   c.fillStyle=bg;c.beginPath();c.moveTo(46,-21);c.lineTo(170,-36);c.lineTo(170,2);c.lineTo(46,-15);c.closePath();c.fill();}
+ const drop=cfg.stance==='slammed'?4.2:cfg.stance==='low'?2.4:0;
  const hasSub=cfg.sub&&cfg.sub!=='none',pu=o.pulse||0,bo=hasSub&&o.drive?pu*(cfg.sub==='dual'?2.4:1.5):0;
  if(hasSub&&o.drive&&pu>.15){c.strokeStyle=hexA(cfg.sub==='dual'?'#ff5fc7':'#5ff3ff',pu*.55);c.lineWidth=1.6;c.beginPath();c.ellipse(-20,-18,30+(1-pu)*40,16+(1-pu)*22,0,0,6.3);c.stroke();}
+ c.save();c.translate(0,drop);
  if(cfg.exhaust&&cfg.exhaust!=='none'&&o.drive){const L=10+Math.random()*12,neon=cfg.exhaust==='neon';c.fillStyle=neon?'rgba(95,243,255,.8)':'#ff8f3a';c.beginPath();c.moveTo(-47,-13);c.lineTo(-47-L,-10.5+Math.random()*2-1);c.lineTo(-47,-8.5);c.closePath();c.fill();c.fillStyle=neon?'#e6fdff':'#ffd166';c.beginPath();c.moveTo(-47,-12);c.lineTo(-47-L*.55,-10.5);c.lineTo(-47,-9.5);c.closePath();c.fill();}
- c.translate(0,-bo);
+ c.restore();
+ c.translate(0,-bo+drop);
  c.fillStyle=col;c.beginPath();c.moveTo(-46,-11);c.lineTo(-46,-21);c.lineTo(-31,-24);c.lineTo(-15,-36);c.lineTo(13,-36);c.lineTo(28,-25);c.lineTo(46,-21);c.lineTo(48,-13);c.lineTo(45,-8);c.lineTo(-44,-8);c.closePath();c.fill();
  c.fillStyle='rgba(0,0,0,.22)';c.fillRect(-46,-14,94,6);
  c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1;c.beginPath();c.moveTo(-44,-20.5);c.lineTo(45,-19.5);c.stroke();
@@ -784,7 +788,7 @@ function drawCar(c,x,y,cfg,t,o={}){
  c.fillStyle='#ff3355';c.fillRect(-47,-20,3,4);
  c.fillStyle='#fff6c8';c.fillRect(39,-22,7,2.6);
  c.fillStyle='#0c0b12';c.beginPath();c.arc(-28,-9,10.5,Math.PI,0);c.fill();c.beginPath();c.arc(29,-9,10.5,Math.PI,0);c.fill();
- wheel(c,-28,-9+bo,rim,t,cfg.rims==='neon');wheel(c,29,-9+bo,rim,t,cfg.rims==='neon');
+ wheel(c,-28,-9+bo-drop,rim,t,cfg.rims==='neon');wheel(c,29,-9+bo-drop,rim,t,cfg.rims==='neon');
  c.restore();
 }
 function wheel(c,x,y,rim,t,neon){
@@ -1291,7 +1295,7 @@ function buildWardrobe(){
 function buildGarage(){
  $('#walletN').textContent=save.notes;
  const box=$('#garageOpts');box.innerHTML='';
- for(const cat of ['color','decal','rims','glow','sub','wing','exhaust']){
+ for(const cat of ['color','decal','rims','stance','glow','sub','wing','exhaust']){
   const g=document.createElement('div');g.className='optgroup';g.innerHTML=`<h4>${GARAGE_LABEL[cat]}</h4><div class="chips"></div>`;
   const row=g.querySelector('.chips');
   for(const it of GARAGE[cat]){
