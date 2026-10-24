@@ -585,8 +585,8 @@ function drawHead(c,look){
  else if(g!=='none'){const dark=g==='dark';c.strokeStyle=dark?'#2b1f2e':'#8a8aa0';c.lineWidth=dark?1.7:1.2;
   c.beginPath();c.arc(-3,2,4.6,0,6.3);c.stroke();c.beginPath();c.arc(7,2,4.6,0,6.3);c.stroke();
   c.beginPath();c.moveTo(1.6,1.6);c.lineTo(2.4,1.6);c.stroke();}
- if(g!=='none'){const tc={heart:'#d6327f',sun:'#1c1a24',dark:'#2b1f2e'}[g]||'#8a8aa0';c.strokeStyle=tc;c.lineWidth=g==='thin'?1.1:1.5;c.lineCap='round';
-  c.beginPath();c.moveTo(-7.4,1.2);c.lineTo(-14.6,-.6);c.moveTo(11.4,1.2);c.lineTo(14.8,-.3);c.stroke();c.lineCap='butt';}
+ if(g!=='none'){const tc={heart:'#d6327f',sun:'#1c1a24',dark:'#2b1f2e'}[g]||'#8a8aa0';c.strokeStyle=tc;c.lineWidth=g==='thin'?1.5:1.9;c.lineCap='round';
+  c.beginPath();c.moveTo(-7.4,1.4);c.lineTo(-15.5,-.4);c.moveTo(11.4,1.4);c.lineTo(15.5,0);c.stroke();c.lineCap='butt';}
  drawHat(c,look.hat);
  if(look.phones!=='none'){const ph=lookItem('phones',look.phones),pc=ph.c;
  if(look.hat!=='crown'){c.strokeStyle=pc;c.lineWidth=2.8;c.beginPath();c.arc(0,-1,17,Math.PI*1.06,Math.PI*1.94);c.stroke();}
