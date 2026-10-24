@@ -484,7 +484,7 @@ const BOTS={jeans:'#9dbbe0',pants:'#80808c',black:'#2c2a35',cargo:'#8b8a5c'};
 const SHOES={green:['#2e9e5b','#fff'],white:['#f2f0ea','#b9b6c8'],pink:['#ff8cc8','#fff'],chunky:['#26242e','#ff5fc7']};
 const sleeveOf=top=>{const t=TOPS[top]||TOPS.hoodie;return t[0]==='v'?t[2]:t[1];};
 function arm(c,s,col,back){
- c.save();c.translate(back?-8:8,-28);c.rotate(-s*.7);
+ c.save();c.translate(back?8:-8,-28);c.rotate(-s*.7);
  c.fillStyle=back?shade(col,.28):col;rr(c,-3.2,0,6.4,11,3.2);c.fill();
  c.fillStyle=back?shade(SKIN,.2):SKIN;c.beginPath();c.arc(0,12.5,2.8,0,6.3);c.fill();
  c.restore();
@@ -502,7 +502,7 @@ function leg(c,s,bot,shoes,back,lift){
   if(bot==='cargo'){c.fillStyle='rgba(0,0,0,.16)';rr(c,-3,3,3.6,3.4,1);c.fill();}
  }
  const sh=SHOES[shoes]||SHOES.green,chunk=shoes==='chunky',sole=chunk?2.4:1.5;
- c.save();c.translate(0,10.5);c.rotate(-s*.6*.85);
+ c.save();c.translate(0,10.5);c.rotate(-s*.6*.85);c.scale(-1,1);
  c.fillStyle=S(sh[0]);c.beginPath();
  c.moveTo(-3.4,2.2);c.lineTo(-3.4,-1.6);c.quadraticCurveTo(-3,-2.6,-1.2,-2.6);c.lineTo(1.8,-2.4);
  c.quadraticCurveTo(4.2,-1.6,6.4,.2);c.quadraticCurveTo(9.4,1,9.2,2.2);c.closePath();c.fill();
