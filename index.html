@@ -548,11 +548,16 @@ const SKIN='#f2cbb3',HAIR='#94704a',HAIR_HI='#b8936a',HAIR_DK='#7d5c3b';
 const lookItem=(cat,id)=>LOOKS[cat].find(i=>i.id===id)||LOOKS[cat][0];
 const ownsLook=(cat,id)=>{const it=lookItem(cat,id);return !it.cost||!!save.owned['look:'+cat+':'+id];};
 function hairBack(c){
- c.fillStyle=HAIR_DK;c.beginPath();c.moveTo(-15,-2);
- c.bezierCurveTo(-19,10,-16,16,-18,20);c.bezierCurveTo(-14,23,-11,21,-9,19);
- c.bezierCurveTo(-6,22,-3,21,0,19);c.bezierCurveTo(3,21,6,22,9,19);
- c.bezierCurveTo(11,21,14,23,18,20);c.bezierCurveTo(16,16,19,10,15,-2);c.closePath();c.fill();
+ c.fillStyle=HAIR_DK;c.beginPath();c.moveTo(-15,-4);
+ c.bezierCurveTo(-21,3,-17,8,-20.5,13);c.bezierCurveTo(-23,18,-18,23,-15,22.5);
+ c.bezierCurveTo(-13,25,-9,24,-8,21.5);c.bezierCurveTo(-5,24,-1,23.5,0,21);
+ c.bezierCurveTo(1.5,23.5,6,24,8,21.5);c.bezierCurveTo(9.5,24,14,25,15.5,22);
+ c.bezierCurveTo(19,22.5,22.5,17.5,20,12.5);c.bezierCurveTo(17.5,8,21.5,3,15.5,-4);c.closePath();c.fill();
 }
+function hairWave(c,x0,y0,dir,len,w){
+ c.beginPath();c.moveTo(x0,y0);
+ c.bezierCurveTo(x0+dir*3.5,y0+len*.22,x0-dir*2.8,y0+len*.38,x0+dir*1.2,y0+len*.55);
+ c.bezierCurveTo(x0+dir*4.5,y0+len*.72,x0-dir*1.8,y0+len*.86,x0+dir*1.6,y0+len);c.lineWidth=w;c.stroke();}
 function heart(c,x,y,r){c.beginPath();c.moveTo(x,y+r*.9);c.bezierCurveTo(x-r*1.6,y-r*.2,x-r*.7,y-r*1.4,x,y-r*.5);c.bezierCurveTo(x+r*.7,y-r*1.4,x+r*1.6,y-r*.2,x,y+r*.9);c.closePath();}
 function drawHat(c,hat){
  if(hat==='cap'){c.fillStyle='#ff5fc7';c.beginPath();c.moveTo(-15,-5);c.bezierCurveTo(-15,-20,15,-20,15,-5);c.closePath();c.fill();
@@ -573,11 +578,22 @@ function drawHead(c,look){
  c.fillStyle='#2a1d22';c.beginPath();c.ellipse(-3,2,1.7,2.2,0,0,6.3);c.fill();c.beginPath();c.ellipse(7,2,1.7,2.2,0,0,6.3);c.fill();
  c.fillStyle='#fff';c.beginPath();c.arc(-2.4,1.2,.7,0,6.3);c.fill();c.beginPath();c.arc(7.6,1.2,.7,0,6.3);c.fill();
  c.strokeStyle='#b8656a';c.lineWidth=1;c.lineCap='round';c.beginPath();c.moveTo(.5,8.5);c.quadraticCurveTo(2.5,10.2,4.5,8.5);c.stroke();
- c.fillStyle=HAIR;c.beginPath();c.moveTo(-15,1);c.bezierCurveTo(-17,-16,14,-20,15.5,-1);
- c.bezierCurveTo(12,-7,7,-9.5,2,-8.5);c.bezierCurveTo(-4,-7.5,-10,-4,-15,1);c.fill();
- c.strokeStyle=HAIR;c.lineWidth=4.5;c.beginPath();c.moveTo(-14,-1);c.bezierCurveTo(-18,6,-12,10,-16,16);c.stroke();
- c.beginPath();c.moveTo(14.5,-1);c.bezierCurveTo(18,6,12.5,10,16,15);c.stroke();
- c.strokeStyle=HAIR_HI;c.lineWidth=1.3;c.beginPath();c.moveTo(-5,-13.5);c.bezierCurveTo(1,-15.5,7,-13.5,11,-9);c.stroke();
+ const hat=look.hat&&look.hat!=='none';
+ c.fillStyle=HAIR;c.beginPath();c.moveTo(-15.5,2);
+ c.bezierCurveTo(-18,-14,-4,-19.5,1.5,-16.2);c.bezierCurveTo(8,-19.5,18.5,-12,15.8,2);
+ c.bezierCurveTo(14,-4,11.5,-8,7,-10);c.bezierCurveTo(5,-10.6,3,-11.6,1.6,-13.4);
+ c.bezierCurveTo(-1,-10.5,-5,-9.6,-8.5,-8);c.bezierCurveTo(-12,-6,-14,-3,-15.5,2);c.closePath();c.fill();
+ c.lineCap='round';c.lineJoin='round';
+ c.strokeStyle=HAIR;hairWave(c,-14,-3,-1,21,5.2);hairWave(c,14.6,-2.5,1,20,5);
+ c.strokeStyle=HAIR;hairWave(c,-11.5,-5,-1,15,3.4);hairWave(c,12,-6,1,14,3.2);
+ c.strokeStyle=HAIR_HI;hairWave(c,-14.6,-1,-1,17,1.1);hairWave(c,15,0,1,16,1.1);
+ if(!hat){
+  c.strokeStyle=HAIR_DK;c.lineWidth=.9;c.beginPath();c.moveTo(1.6,-16);c.quadraticCurveTo(1.9,-14.6,1.6,-13.2);c.stroke();
+  c.strokeStyle=HAIR_HI;c.lineWidth=1.3;c.beginPath();c.moveTo(-1.5,-15.2);c.bezierCurveTo(-6,-15,-10.5,-11,-12.6,-5.5);c.stroke();
+  c.beginPath();c.moveTo(4.5,-15.4);c.bezierCurveTo(9,-14.6,12.6,-10.5,13.8,-5);c.stroke();
+  c.strokeStyle=HAIR;c.lineWidth=.7;
+  c.beginPath();c.moveTo(-10,-12.5);c.quadraticCurveTo(-13,-14,-15.5,-12);c.stroke();
+ }
  c.lineCap='butt';
  const g=look.glasses;
  if(g==='heart'){c.fillStyle='rgba(255,95,199,.75)';heart(c,-3,2.4,4.2);c.fill();heart(c,7,2.4,4.2);c.fill();c.strokeStyle='#d6327f';c.lineWidth=1;heart(c,-3,2.4,4.2);c.stroke();heart(c,7,2.4,4.2);c.stroke();c.beginPath();c.moveTo(1.4,1.5);c.lineTo(2.6,1.5);c.stroke();}
