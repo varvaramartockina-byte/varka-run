@@ -245,7 +245,7 @@ kbd{font:700 10px var(--f-head);border:1.5px solid #000;border-radius:4px;paddin
         </div>
       </div>
     </div>
-    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 17</small></span><span id="capBest"></span></div>
+    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 18</small></span><span id="capBest"></span></div>
   </div>
 
   <div class="tabs" role="tablist">
@@ -578,6 +578,12 @@ function drawHead(c,look){
  c.fillStyle='rgba(244,163,168,.6)';c.beginPath();c.ellipse(-8,6,3.4,1.8,0,0,6.3);c.fill();c.beginPath();c.ellipse(11,6,3.4,1.8,0,0,6.3);c.fill();
  c.fillStyle='#2a1d22';c.beginPath();c.ellipse(-3,2,1.7,2.2,0,0,6.3);c.fill();c.beginPath();c.ellipse(7,2,1.7,2.2,0,0,6.3);c.fill();
  c.fillStyle='#fff';c.beginPath();c.arc(-2.4,1.2,.7,0,6.3);c.fill();c.beginPath();c.arc(7.6,1.2,.7,0,6.3);c.fill();
+ c.strokeStyle='#2a1d22';c.lineCap='round';c.lineWidth=.62;
+ for(const [ex,dir] of [[-3,-1],[7,1]]){
+  c.beginPath();c.ellipse(ex,2,2.1,2.6,0,Math.PI*1.12,Math.PI*1.88);c.stroke();
+  const ox=ex+dir*1.9,oy=.6;
+  c.beginPath();c.moveTo(ox,oy);c.lineTo(ox+dir*1.3,oy-.9);c.moveTo(ox-dir*.5,oy-.9);c.lineTo(ox+dir*.5,oy-2);c.moveTo(ex+dir*.4,-.5);c.lineTo(ex+dir*.6,-1.6);c.stroke();}
+ c.lineCap='butt';
  c.strokeStyle='#b8656a';c.lineWidth=1;c.lineCap='round';c.beginPath();c.moveTo(.5,8.5);c.quadraticCurveTo(2.5,10.2,4.5,8.5);c.stroke();
  const hat=look.hat&&look.hat!=='none';
  c.fillStyle=HAIR;c.beginPath();c.moveTo(-15.5,2);
@@ -604,6 +610,18 @@ function drawHead(c,look){
   c.beginPath();c.moveTo(1.6,1.6);c.lineTo(2.4,1.6);c.stroke();}
  if(g!=='none'){const tc={heart:'#d6327f',sun:'#1c1a24',dark:'#2b1f2e'}[g]||'#8a8aa0';c.strokeStyle=tc;c.lineWidth=g==='thin'?1.5:1.9;c.lineCap='round';
   c.beginPath();c.moveTo(-7.4,1.4);c.lineTo(-15.5,-.4);c.moveTo(11.4,1.4);c.lineTo(15.5,0);c.stroke();c.lineCap='butt';}
+ c.fillStyle=HAIR;
+ c.beginPath();c.moveTo(-1.6,-14.4);c.bezierCurveTo(-8,-13.5,-13.8,-9,-13.8,-3);c.bezierCurveTo(-13.8,1.5,-12,4,-12.8,8.5);
+ c.bezierCurveTo(-10.8,6,-10.6,2,-10.8,-1.5);c.bezierCurveTo(-11,-6.5,-7,-10.8,-.6,-12.6);c.closePath();c.fill();
+ c.beginPath();c.moveTo(4.6,-14.4);c.bezierCurveTo(11,-13.4,15.6,-8.6,15.4,-2.6);c.bezierCurveTo(15.2,2,13.6,4.4,14.4,8.8);
+ c.bezierCurveTo(12.4,6.2,12.4,2.2,12.6,-1.2);c.bezierCurveTo(12.8,-6.2,9.4,-10.6,3.6,-12.6);c.closePath();c.fill();
+ c.strokeStyle=HAIR_HI;c.lineWidth=.9;c.lineCap='round';
+ c.beginPath();c.moveTo(-3,-13.2);c.bezierCurveTo(-8.5,-12,-12.4,-8,-12.6,-2.5);c.stroke();
+ c.beginPath();c.moveTo(6,-13.2);c.bezierCurveTo(11,-12,14.2,-8,14.2,-2.2);c.stroke();
+ c.strokeStyle=HAIR_DK;c.lineWidth=.6;
+ c.beginPath();c.moveTo(-11.6,-2);c.bezierCurveTo(-11.8,2,-11.2,4.5,-12,7.4);c.stroke();
+ c.beginPath();c.moveTo(13.6,-1.6);c.bezierCurveTo(13.4,2.4,13,4.6,13.8,7.6);c.stroke();
+ c.lineCap='butt';
  drawHat(c,look.hat);
  if(look.phones!=='none'){const ph=lookItem('phones',look.phones),pc=ph.c;
  if(look.hat!=='crown'){c.strokeStyle=pc;c.lineWidth=2.8;c.beginPath();c.arc(0,-1,17,Math.PI*1.06,Math.PI*1.94);c.stroke();}
