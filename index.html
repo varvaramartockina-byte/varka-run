@@ -245,7 +245,7 @@ kbd{font:700 10px var(--f-head);border:1.5px solid #000;border-radius:4px;paddin
         </div>
       </div>
     </div>
-    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 18</small></span><span id="capBest"></span></div>
+    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 19</small></span><span id="capBest"></span></div>
   </div>
 
   <div class="tabs" role="tablist">
@@ -579,7 +579,7 @@ function drawHead(c,look){
  c.fillStyle='#2a1d22';c.beginPath();c.ellipse(-3,2,1.7,2.2,0,0,6.3);c.fill();c.beginPath();c.ellipse(7,2,1.7,2.2,0,0,6.3);c.fill();
  c.fillStyle='#fff';c.beginPath();c.arc(-2.4,1.2,.7,0,6.3);c.fill();c.beginPath();c.arc(7.6,1.2,.7,0,6.3);c.fill();
  c.strokeStyle='#2a1d22';c.lineCap='round';c.lineWidth=.62;
- for(const [ex,dir] of [[-3,-1],[7,1]]){
+ if(look.glasses!=='sun')for(const [ex,dir] of [[-3,-1],[7,1]]){
   c.beginPath();c.ellipse(ex,2,2.1,2.6,0,Math.PI*1.12,Math.PI*1.88);c.stroke();
   const ox=ex+dir*1.9,oy=.6;
   c.beginPath();c.moveTo(ox,oy);c.lineTo(ox+dir*1.3,oy-.9);c.moveTo(ox-dir*.5,oy-.9);c.lineTo(ox+dir*.5,oy-2);c.moveTo(ex+dir*.4,-.5);c.lineTo(ex+dir*.6,-1.6);c.stroke();}
@@ -604,23 +604,34 @@ function drawHead(c,look){
  c.lineCap='butt';
  const g=look.glasses;
  if(g==='heart'){c.fillStyle='rgba(255,95,199,.75)';heart(c,-3,2.4,4.2);c.fill();heart(c,7,2.4,4.2);c.fill();c.strokeStyle='#d6327f';c.lineWidth=1;heart(c,-3,2.4,4.2);c.stroke();heart(c,7,2.4,4.2);c.stroke();c.beginPath();c.moveTo(1.4,1.5);c.lineTo(2.6,1.5);c.stroke();}
- else if(g==='sun'){c.fillStyle='#1c1a24';rr(c,-8,-1.5,10,7,3);c.fill();rr(c,2,-1.5,10,7,3);c.fill();c.fillStyle='rgba(255,255,255,.35)';c.fillRect(-6,0,3,1.2);c.fillRect(4,0,3,1.2);c.fillStyle='#1c1a24';c.fillRect(1.5,0,1.5,1.2);}
+ else if(g==='sun'){
+  for(const [cx,rot] of [[-3.2,.16],[7.4,-.16]]){c.save();c.translate(cx,2.1);c.rotate(rot);
+   c.fillStyle='#0b0a10';c.beginPath();c.ellipse(0,0,5.5,3.1,0,0,6.3);c.fill();
+   c.fillStyle='#1d1c27';c.beginPath();c.ellipse(0,.2,4.7,2.4,0,0,6.3);c.fill();
+   c.strokeStyle='rgba(170,178,205,.55)';c.lineWidth=.7;c.beginPath();c.moveTo(-3,1.2);c.quadraticCurveTo(-.5,-1.6,2.8,-1.4);c.stroke();
+   c.fillStyle='rgba(255,255,255,.85)';c.beginPath();c.ellipse(2.6,-.9,.9,.45,-.3,0,6.3);c.fill();
+   c.restore();}
+  c.strokeStyle='#0b0a10';c.lineWidth=1.1;c.beginPath();c.moveTo(1.6,1.4);c.quadraticCurveTo(2.1,.9,2.6,1.4);c.stroke();}
  else if(g!=='none'){const dark=g==='dark';c.strokeStyle=dark?'#2b1f2e':'#8a8aa0';c.lineWidth=dark?1.7:1.2;
   c.beginPath();c.arc(-3,2,4.6,0,6.3);c.stroke();c.beginPath();c.arc(7,2,4.6,0,6.3);c.stroke();
   c.beginPath();c.moveTo(1.6,1.6);c.lineTo(2.4,1.6);c.stroke();}
  if(g!=='none'){const tc={heart:'#d6327f',sun:'#1c1a24',dark:'#2b1f2e'}[g]||'#8a8aa0';c.strokeStyle=tc;c.lineWidth=g==='thin'?1.5:1.9;c.lineCap='round';
-  c.beginPath();c.moveTo(-7.4,1.4);c.lineTo(-15.5,-.4);c.moveTo(11.4,1.4);c.lineTo(15.5,0);c.stroke();c.lineCap='butt';}
- c.fillStyle=HAIR;
- c.beginPath();c.moveTo(-1.6,-14.4);c.bezierCurveTo(-8,-13.5,-13.8,-9,-13.8,-3);c.bezierCurveTo(-13.8,1.5,-12,4,-12.8,8.5);
- c.bezierCurveTo(-10.8,6,-10.6,2,-10.8,-1.5);c.bezierCurveTo(-11,-6.5,-7,-10.8,-.6,-12.6);c.closePath();c.fill();
- c.beginPath();c.moveTo(4.6,-14.4);c.bezierCurveTo(11,-13.4,15.6,-8.6,15.4,-2.6);c.bezierCurveTo(15.2,2,13.6,4.4,14.4,8.8);
- c.bezierCurveTo(12.4,6.2,12.4,2.2,12.6,-1.2);c.bezierCurveTo(12.8,-6.2,9.4,-10.6,3.6,-12.6);c.closePath();c.fill();
- c.strokeStyle=HAIR_HI;c.lineWidth=.9;c.lineCap='round';
- c.beginPath();c.moveTo(-3,-13.2);c.bezierCurveTo(-8.5,-12,-12.4,-8,-12.6,-2.5);c.stroke();
- c.beginPath();c.moveTo(6,-13.2);c.bezierCurveTo(11,-12,14.2,-8,14.2,-2.2);c.stroke();
+  c.beginPath();c.moveTo(-7.4,1.4);c.lineTo(-13.6,0);c.moveTo(11.4,1.4);c.lineTo(14.6,.2);c.stroke();c.lineCap='butt';}
+ c.fillStyle=HAIR;c.lineCap='round';
+ c.beginPath();c.moveTo(-1.6,-14.4);c.bezierCurveTo(-8,-13.5,-14,-9,-14.2,-3);
+ c.bezierCurveTo(-14.4,2,-16.6,5,-15.2,9);c.bezierCurveTo(-14,12.5,-17.4,15.5,-16,20.5);
+ c.bezierCurveTo(-14.4,18.5,-12.6,16,-13,13);c.bezierCurveTo(-13.4,10,-10.6,7.5,-11.2,3.5);
+ c.bezierCurveTo(-11.6,-1,-10.8,-6.5,-.6,-12.6);c.closePath();c.fill();
+ c.beginPath();c.moveTo(4.6,-14.4);c.bezierCurveTo(11,-13.4,16,-8.6,16,-2.6);
+ c.bezierCurveTo(16.2,2,18.4,5,17,9);c.bezierCurveTo(15.8,12.5,19.2,15.5,17.8,20.5);
+ c.bezierCurveTo(16.2,18.5,14.4,16,14.8,13);c.bezierCurveTo(15.2,10,12.6,7.5,13.2,3.5);
+ c.bezierCurveTo(13.6,-1,12.8,-6.2,3.6,-12.6);c.closePath();c.fill();
+ c.strokeStyle=HAIR_HI;c.lineWidth=.9;
+ c.beginPath();c.moveTo(-3,-13.2);c.bezierCurveTo(-8.5,-12,-12.6,-8,-12.8,-2.5);c.bezierCurveTo(-13,1.5,-14.6,5,-13.8,8.5);c.stroke();
+ c.beginPath();c.moveTo(6,-13.2);c.bezierCurveTo(11,-12,14.6,-8,14.6,-2.2);c.bezierCurveTo(14.8,1.8,16.4,5,15.6,8.6);c.stroke();
  c.strokeStyle=HAIR_DK;c.lineWidth=.6;
- c.beginPath();c.moveTo(-11.6,-2);c.bezierCurveTo(-11.8,2,-11.2,4.5,-12,7.4);c.stroke();
- c.beginPath();c.moveTo(13.6,-1.6);c.bezierCurveTo(13.4,2.4,13,4.6,13.8,7.6);c.stroke();
+ c.beginPath();c.moveTo(-12.2,4);c.bezierCurveTo(-12,8,-15.4,12,-14.6,17);c.stroke();
+ c.beginPath();c.moveTo(14.2,4);c.bezierCurveTo(14,8,17.4,12,16.6,17);c.stroke();
  c.lineCap='butt';
  drawHat(c,look.hat);
  if(look.phones!=='none'){const ph=lookItem('phones',look.phones),pc=ph.c;
