@@ -490,9 +490,9 @@ function arm(c,s,col,back){
  c.restore();
 }
 function shade(hex,amt){const n=parseInt(hex.slice(1),16),t=[26,20,56];const ch=[n>>16&255,n>>8&255,n&255].map((v,i)=>Math.round(v+(t[i]-v)*amt));return '#'+ch.map(v=>v.toString(16).padStart(2,'0')).join('');}
-function leg(c,s,bot,shoes,back){
+function leg(c,s,bot,shoes,back,lift){
  const d=back?.28:0,S=h=>d?shade(h,d):h;
- c.save();c.translate(back?-3:3,-12);c.rotate(s*.6);
+ c.save();c.translate(back?-3:3,-12-(lift||0)*4);c.rotate(s*.6);
  if(bot==='shorts'||bot==='skirt'){
   c.fillStyle=S(SKIN);rr(c,-2.6,1,5.2,10,2.4);c.fill();
   c.fillStyle=S('#fbfbff');c.fillRect(-2.6,7.6,5.2,2.8);
@@ -541,8 +541,9 @@ function drawPlayer(c,x,y,t,look,o={}){
  else if(running&&!air)c.rotate(.06);
  c.save();c.translate(0,-44);hairBack(c);c.restore();
  arm(c,-sw,sleeve,true);
- leg(c,-sw,look.bottom,look.shoes,true);
- leg(c,sw,look.bottom,look.shoes,false);
+ const cph=running&&!air?Math.cos(ph):0;
+ leg(c,-sw,look.bottom,look.shoes,true,Math.max(0,cph));
+ leg(c,sw,look.bottom,look.shoes,false,Math.max(0,-cph));
  torso(c,look.top);
  if(look.bottom==='skirt'){c.fillStyle='#a8324a';c.beginPath();c.moveTo(-10,-13);c.lineTo(10,-13);c.lineTo(13,-4);c.lineTo(-13,-4);c.closePath();c.fill();
   c.strokeStyle='rgba(255,220,150,.55)';c.lineWidth=.8;for(let i=-10;i<=10;i+=5){c.beginPath();c.moveTo(i,-13);c.lineTo(i*1.25,-4);c.stroke();}c.beginPath();c.moveTo(-11.5,-8.5);c.lineTo(11.5,-8.5);c.stroke();}
