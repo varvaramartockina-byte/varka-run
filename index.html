@@ -911,7 +911,25 @@ function updateHUD(){
 function showScreen(id){for(const s of ['menu','pauseScr','results'])$('#'+s).hidden=s!==id;}
 const nickKey=n=>String(n||'').trim().replace(/\s+/g,' ').toLowerCase().replace(/ё/g,'е');
 const docIdOf=k=>'n'+Array.from(new TextEncoder().encode(k)).map(x=>x.toString(16).padStart(2,'0')).join('');
-const LB={db:null,shared:false,canWrite:true,rows:[],note:''};
+const LB={db:null,sb:false,shared:false,canWrite:true,rows:[],note:''};
+const SB_URL='https://jtrwquyiruemwgcklgdj.supabase.co',SB_KEY='sb_publishable_nqJleh8e4uIi_3v5NZIC8A_v2gXZGj9';
+const sbHeaders={apikey:SB_KEY,'Content-Type':'application/json'};
+async function sbLoad(){
+ try{const res=await fetch(SB_URL+'/rest/v1/scores?select=nick,score,dist,tracks,ok,runs,updated_at&order=score.desc&limit=200',{headers:sbHeaders,cache:'no-store'});
+  if(!res.ok)throw new Error('http '+res.status);
+  const arr=await res.json();const m=new Map();
+  for(const d of (Array.isArray(arr)?arr:[])){const r=cleanRow({...d,at:Date.parse(d.updated_at)||0});if(r&&!m.has(r.key))m.set(r.key,r);}
+  LB.rows=[...m.values()].sort((a,b)=>b.score-a.score);LB.shared=true;if(LB.note.startsWith('Общий рейтинг сейчас'))LB.note='';
+ }catch(e){if(!LB.shared){LB.note='Общий рейтинг сейчас не загрузился, показываю рейтинг этого устройства. Проверь интернет и обнови страницу.';}}
+ refreshBoards();refreshMenu();
+}
+async function sbSubmit(e){
+ try{const res=await fetch(SB_URL+'/rest/v1/rpc/submit_score',{method:'POST',headers:sbHeaders,body:JSON.stringify({p_nick:e.nick,p_score:e.score,p_dist:e.dist,p_tracks:e.tracks,p_ok:!!e.ok})});
+  if(!res.ok)throw new Error('http '+res.status);
+ }catch(err){LB.note='Не получилось отправить результат в общий рейтинг. Он сохранён на этом устройстве.';refreshBoards();return;}
+ sbLoad();
+}
+function sbStart(){LB.sb=true;sbLoad();setInterval(()=>{if(!document.hidden)sbLoad();},20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)sbLoad();});}
 function cleanRow(d){if(!d||typeof d!=='object')return null;const nick=String(d.nick||'').slice(0,16).trim();if(!nick)return null;
  return {nick,key:nickKey(nick),score:Math.max(0,Math.floor(+d.score||0)),dist:Math.max(0,Math.floor(+d.dist||0)),tracks:Math.max(0,Math.floor(+d.tracks||0)),ok:!!d.ok,runs:Math.max(1,Math.floor(+d.runs||1)),at:+d.at||0};}
 function dedupeLocal(){const m=new Map();
@@ -925,6 +943,7 @@ function mergeEntry(list,e,countRun){const i=list.findIndex(x=>x.key===e.key);
  if(i<0){list.push({...e,runs:1});}else{const ex=list[i],better=e.score>ex.score;list[i]={...(better?e:ex),nick:better?e.nick:ex.nick,runs:(ex.runs||1)+(countRun?1:0)};}
  list.sort((a,b)=>b.score-a.score);return list;}
 async function pushRemote(e,countRun){
+ if(LB.sb){if(countRun)return sbSubmit(e);return;}
  if(!LB.db||!LB.canWrite)return;
  const ref=LB.db.collection('scores').doc(docIdOf(e.key));
  try{const snap=await ref.get();const ex=snap.exists?cleanRow(snap.data()):null;
@@ -947,13 +966,13 @@ function renderBoard(el,max){
 function refreshBoards(){
  renderBoard($('#fullBoard'),100);
  const mode=$('#lbMode');mode.textContent=LB.shared?'общий рейтинг · с любого устройства':'рейтинг этого устройства';mode.classList.toggle('shared',LB.shared);
- $('#lbNote').textContent=LB.note||(LB.shared?'Один ник — одна строка. Заходишь под своим ником с другого устройства, и рекорд продолжает расти в той же строке.':'Один ник — одна строка. Общий рейтинг между устройствами работает в версии игры по ссылке.');
+ $('#lbNote').textContent=LB.note||(LB.shared?'Один ник — одна строка. Заходишь под своим ником с другого устройства, и рекорд продолжает расти в той же строке.':'Один ник — одна строка. Загружаю общий рейтинг…');
  if(!$('#results').hidden&&run&&run.final!=null){const me=nickKey(save.nick),place=boardRows().findIndex(x=>x.key===me)+1;
   $('#resPlace').textContent=place?`${save.nick}, ты на ${place} месте!`:'Таблица рекордов';renderBoard($('#resBoard'),10);}
  const b=bestFor(save.nick);$('#capBest').textContent='рекорд: '+b;
 }
 (async()=>{try{
- if(!window.claude||typeof window.claude.use!=='function')return;
+ if(!window.claude||typeof window.claude.use!=='function'){sbStart();return;}
  const db=await window.claude.use('db');if(!db)return;
  try{const u=await window.claude.use('user');if(u){const c=await u.can('data.write');if(c===false)LB.canWrite=false;}}catch(e){}
  LB.db=db;
