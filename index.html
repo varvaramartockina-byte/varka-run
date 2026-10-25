@@ -245,7 +245,7 @@ kbd{font:700 10px var(--f-head);border:1.5px solid #000;border-radius:4px;paddin
         </div>
       </div>
     </div>
-    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 20</small></span><span id="capBest"></span></div>
+    <div class="caption"><span>это я, бегу за плейлистом · <small style="opacity:.6">версия 21</small></span><span id="capBest"></span></div>
   </div>
 
   <div class="tabs" role="tablist">
@@ -855,6 +855,18 @@ function drawAlarm(c,x,y,t){
  c.fillStyle='#ff4b5c';c.fillRect(-6,9,3,4);c.fillRect(3,9,3,4);
  c.restore();
 }
+function drawScooter(c,x,y,t){
+ c.save();c.translate(x,y+11);
+ c.fillStyle='#1a1822';c.beginPath();c.arc(-9,-3,3.2,0,6.3);c.fill();c.beginPath();c.arc(9,-3,3.2,0,6.3);c.fill();
+ c.fillStyle='#8a8aa0';c.beginPath();c.arc(-9,-3,1.2,0,6.3);c.fill();c.beginPath();c.arc(9,-3,1.2,0,6.3);c.fill();
+ c.fillStyle='#3fbf5a';rr(c,-11,-7.5,20,3.2,1.5);c.fill();
+ c.strokeStyle='#2c2a36';c.lineWidth=2;c.beginPath();c.moveTo(-9,-5);c.lineTo(-11.5,-24);c.stroke();
+ c.lineWidth=1.8;c.beginPath();c.moveTo(-15,-24);c.lineTo(-8,-24);c.stroke();
+ c.save();c.shadowColor='#fff6c8';c.shadowBlur=8;c.fillStyle='#fff6c8';c.beginPath();c.arc(-12,-19,1.4,0,6.3);c.fill();c.restore();
+ c.fillStyle='rgba(255,246,200,.18)';c.beginPath();c.moveTo(-12,-20.5);c.lineTo(-40,-26);c.lineTo(-40,-10);c.lineTo(-12,-17.5);c.closePath();c.fill();
+ c.fillStyle='#ff3fa4';c.fillRect(7,-8.5,3,1.4);
+ c.restore();
+}
 function drawItem(c,it,x,t){
  switch(it.type){
   case 'note':drawNote(c,x,it.y,t,it.c);break;
@@ -863,6 +875,7 @@ function drawItem(c,it,x,t){
   case 'puddle':drawPuddle(c,x,GROUND,t);break;
   case 'bomb':drawBomb(c,x,it.y,t);break;
   case 'alarm':drawAlarm(c,x,it.y,t);break;
+  case 'scooter':drawScooter(c,x,it.y,t);break;
  }
 }
 function drawFinish(c,x,t){
@@ -951,10 +964,10 @@ function gen(){
  if(d>=GOAL){const len=1600;r.ground.push({x:r.genX,w:len});r.finish={x:r.genX+520};
   for(let i=0;i<6;i++)note(r.genX+80+i*50,GROUND-30-Math.sin(i/5*Math.PI)*40);r.genX+=len;return;}
  const first=r.genX===0;
- const gap=first?0:rand(64,92+70*k);
- if(gap>112&&Math.random()<.65)r.plats.push({x:r.genX+gap/2-38,y:236,w:76});
+ const gap=first?0:rand(80,112+95*k);
+ if(gap>125&&Math.random()<.45)r.plats.push({x:r.genX+gap/2-38,y:236,w:76});
  r.genX+=gap;
- const len=first?900:rand(340,640),sx=r.genX;
+ const len=first?900:rand(280,540),sx=r.genX;
  r.ground.push({x:sx,w:len});
  if(first){for(let i=0;i<5;i++)note(sx+360+i*36,GROUND-28-Math.sin(i/4*Math.PI)*58);r.items.push({type:'banana',x:sx+700,y:GROUND-70});}
  else{
@@ -967,10 +980,11 @@ function gen(){
   if(Math.random()<.75){const ax=sx+rand(40,Math.max(60,len-260));for(let i=0;i<5;i++)note(ax+i*36,GROUND-28-Math.sin(i/4*Math.PI)*58);}
   const spot=()=>sx+rand(70,len-70);
   if(Math.random()<.3+.25*k)r.items.push({type:'puddle',x:spot(),y:GROUND});
-  if(d>120&&Math.random()<.32+.3*k)r.items.push({type:'bomb',x:spot(),y:Math.random()<.5?GROUND-20:GROUND-112});
-  if(d>450&&Math.random()<.16+.16*k){const b=GROUND-132;r.items.push({type:'alarm',x:spot(),y:b,base:b,ph:Math.random()*6});}
+  if(d>100&&Math.random()<.42+.35*k)r.items.push({type:'bomb',x:spot(),y:Math.random()<.5?GROUND-20:GROUND-112});
+  if(d>280&&Math.random()<.24+.26*k){const low=Math.random()<.5,b=low?GROUND-22:GROUND-132;r.items.push({type:'alarm',x:spot(),y:b,base:b,amp:low?4:30,ph:Math.random()*6});}
+  if(d>220&&len>360&&Math.random()<.2+.3*k)r.items.push({type:'scooter',x:sx+len-60,y:GROUND-11});
   if(Math.random()<.5)r.items.push({type:Math.random()<.5?'banana':'peach',x:spot(),y:GROUND-rand(55,125)});
-  if(r.genX-r.lastKeys>3200&&Math.random()<.55){r.items.push({type:'keys',x:spot(),y:GROUND-80});r.lastKeys=r.genX;}
+  if(r.genX-r.lastKeys>5200&&Math.random()<.45){r.items.push({type:'keys',x:spot(),y:GROUND-80});r.lastKeys=r.genX;}
  }
  r.genX+=len;
 }
@@ -1006,6 +1020,9 @@ function collect(it){
    r.streak=0;burst(x,y,'#ff5fc7',18,160);sfx('boom');r.shake=.7;r.flash=.45;r.flashC='255,95,199';
    if(r.playlist.length){const tr=r.playlist.pop();r.pool.unshift(tr);pop('скип: '+(tr[1]||tr[0]),x,y-16,'#ff5fc7');}else pop('скип-бомба',x,y-16,'#ff5fc7');
    break;}
+  case 'scooter':{
+   if(r.eff.car>0){burst(x,y,'#3fbf5a',18,170);r.score+=150;pop('самокат снесён',x,y-16,'#3fbf5a');sfx('boom');break;}
+   sfx('bad');r.shake=1;gameOver('scooter');break;}
   case 'alarm':{
    if(r.eff.car>0){burst(x,y,'#ff4b5c',18,170);r.score+=150;pop('будильник снесён',x,y-16,'#ff4b5c');sfx('boom');break;}
    sfx('bad');r.shake=1;gameOver('alarm');break;}
@@ -1017,7 +1034,7 @@ function update(dt){
  const PX=PXf(),wx0=r.camX+PX;
  if(r.eff.car>0&&r.eff.car<.06&&!onGroundAt(wx0))r.eff.car=.06;
  const k=clamp(r.camX/PX_M/GOAL,0,1);
- const speed=(250+150*k)*(r.eff.banana>0?1.4:1)*(r.eff.slip>0?.6:1)*(r.eff.car>0?1.5:1);
+ const speed=(285+235*k)*(r.eff.banana>0?1.4:1)*(r.eff.slip>0?.6:1)*(r.eff.car>0?1.5:1);
  r.camX+=speed*dt;
  while(r.genX<r.camX+W+400)gen();
  const wx=r.camX+PX;
@@ -1040,7 +1057,8 @@ function update(dt){
   if(it.got)continue;
   if(it.x<r.camX-60)continue;
   if(it.x>r.camX+W+60)continue;
-  if(it.type==='alarm')it.y=it.base+Math.sin(r.t*2.2+it.ph)*28;
+  if(it.type==='alarm')it.y=it.base+Math.sin(r.t*2.6+it.ph)*(it.amp??28);
+  if(it.type==='scooter'&&!car){it.x-=150*dt;if(!onGroundAt(it.x)){it.got=true;continue;}}
   if(car&&(it.type==='note'||it.type==='banana'||it.type==='peach')){const dx=wx-it.x,dy=(P.y-20)-it.y,dd=Math.hypot(dx,dy);if(dd<170){it.x+=dx/dd*420*dt;it.y+=dy/dd*420*dt;}}
   if(it.type==='puddle'){if(P.on&&P.y>=GROUND-1&&Math.abs(it.x-wx)<(car?46:24))collect(it);continue;}
   const rad=it.type==='note'?11:12;
@@ -1210,7 +1228,7 @@ function setPause(on){
  if(on&&state==='play'){state='pause';showScreen('pauseScr');musicStop();}
  else if(!on&&state==='pause'){state='play';showScreen(null);musicStart();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();}
 }
-const REASONS={ok:'Доехала! Закат проводила, ночь встретила, плейлист собран.',fall:'Сорвалась в яму между крышами. Двойной прыжок спасает.',alarm:'Будильник на 8:00 победил. В следующий раз обходи его или снеси на тачке.'};
+const REASONS={scooter:'Влетела в самокат. Их надо перепрыгивать, а на тачке можно сбивать.',ok:'Доехала! Закат проводила, ночь встретила, плейлист собран.',fall:'Сорвалась в яму между крышами. Двойной прыжок спасает.',alarm:'Будильник на 8:00 победил. В следующий раз обходи его или снеси на тачке.'};
 const yaLink=(a,ti)=>'https://music.yandex.ru/search?text='+encodeURIComponent(ti?a+' '+ti:a);
 function finishRun(ok,reason){
  const r=run;state='over';musicStop();
@@ -1331,7 +1349,8 @@ const LEGEND=[
  ['car','keys','Ключи от тачки','6 секунд за рулём: неуязвимость, магнит для нот, мост через ямы. В тачке играет свой трек с басом'],
  ['bad','puddle','Лужа','Подскальзываешься и теряешь скорость'],
  ['bad','bomb','Скип-бомба','Выкидывает последний трек из плейлиста'],
- ['bad','alarm','Будильник 8:00','Конец забега. На тачке его можно снести'],
+ ['bad','alarm','Будильник 8:00','Бывает низко и высоко. Конец забега, а на тачке его можно снести'],
+ ['bad','scooter','Самокат','Едет навстречу. Перепрыгни, иначе конец забега'],
  ['bad','gap','Яма между крышами','Тоже конец. Выручает двойной прыжок'],
  ['car','car','Финиш · 2000 м','Тачка ждёт, ты уезжаешь под свой плейлист']
 ];
@@ -1351,6 +1370,7 @@ function buildLegend(){
   else if(ic==='puddle'){c.scale(1,1);drawPuddle(c,0,6,0);}
   else if(ic==='bomb'){c.scale(1.5,1.5);drawBomb(c,-1,2,0);}
   else if(ic==='alarm'){c.scale(1.5,1.5);drawAlarm(c,0,1,0);}
+  else if(ic==='scooter'){c.scale(1.2,1.2);drawScooter(c,4,-4,0);}
   else if(ic==='gap'){c.fillStyle='#1a1736';c.fillRect(-26,6,18,20);c.fillRect(8,6,18,20);c.fillStyle='#6fa8ff';c.fillRect(-26,6,18,1.5);c.fillRect(8,6,18,1.5);c.fillStyle='#05040f';c.fillRect(-8,6,16,20);}
   else if(ic==='car'){c.scale(.5,.5);drawCar(c,0,22,save.car,0,{});}
   c.restore();
